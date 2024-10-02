@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:two_pass_assembler/core/optab.dart';
 
+import 'optab.dart';
+
 /// Handle the pass 1 algorithm and related methods.
 /// Requires the source assembly (`File`), intermediate (`File`) and
 /// symtab (`File`).
@@ -26,7 +28,11 @@ class PassOne {
 
   /// Run the algorithm and return error codes
   // TODO: error code docs
-  void runAlgorithm() {
+  /// errorCode | Reference
+  /// 0 | No error
+  /// 1 | Duplicate Symbol
+  /// 2 | Invalid opcode
+  int runAlgorithm() {
     // TODO: Pass 1 implementation
 
     List<String> contents = src.readAsLinesSync();
@@ -51,8 +57,36 @@ class PassOne {
           inter.writeAsStringSync(contents[i]);
           continue;
         }
+
+        // If symbol
+        if (symbolInSymtab(line[0]) && line[0] != '-') {
+          return 1;
+        } else {
+          symbols.addAll({line[i]: toHex(locctr)});
+        }
+
+        // optab search
+        if (checkIsValid(line[1])) {
+          locctr += 3;
+        } else if (line[1] == 'WORD') {
+          locctr += 3;
+        } else if (line[1] == 'RESW') {
+          locctr += 3 * int.parse(line[2], radix: 16);
+        } else if (line[1] == 'RESB') {
+          locctr += int.parse(line[2], radix: 16);
+        } else if (line[1] == 'BYTE') {
+          locctr += line[2].length;
+        } else {
+          return 2;
+        }
+
+        inter.writeAsStringSync(
+            '${toHex(locctr)} ${line[0]} ${line[1]} ${line[2]}');
       }
+      inter.writeAsStringSync(
+          '${toHex(locctr)} ${line[0]} ${line[1]} ${line[2]}');
     }
+    return 0;
   }
 
   /// Static method to convert decimal to hex.
@@ -81,6 +115,11 @@ class PassOne {
   }
 
   bool symbolInSymtab(String symbol) {
-    for (int i = 0; i < symbols.keys.length; i++) {}
+    for (int i = 0; i < symbols.keys.length; i++) {
+      if (symbol == (symbols.keys as List)[i]) {
+        return true;
+      }
+    }
+    return false;
   }
 }
