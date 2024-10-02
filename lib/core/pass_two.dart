@@ -46,4 +46,8 @@ class PassTwo {
   /// ```
   /// In case of an error, error code is returned immediately and the output
   /// files will be invalid.
+  int run() {
+    int errCode = 0;
+    return errCode;
+  }
 }
