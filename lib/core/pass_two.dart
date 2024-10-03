@@ -52,9 +52,13 @@ class PassTwo {
     String textRec = 'T^';
     String opAddr = '';
 
-
     for (int i = 0; i < contents.length; i++) {
-      line = PassOne.formatLine(contents[i]);
+      line = PassTwo.formatLine(contents[i]);
+      print(contents[i]);
+      print(line[0]);
+      print(line[1]);
+      print(line[2]);
+      print(line[3]);
       if (i == 0 && line[1] == 'START') {
         int l = int.parse(len.readAsStringSync());
         textRec += line[2];
@@ -68,35 +72,32 @@ class PassTwo {
       textRec += "^${int.parse(len.readAsStringSync())}^";
 
       // TEXT record
-      while (line[2] != 'END') {
-        // IF comment
-        if (contents[i].startsWith(';')) {
-          continue;
-        }
+      // IF comment
+      if (contents[i].startsWith(';')) {
+        continue;
+      }
 
-        // IF opcode
-        if (checkIsValid(line[2])) {
-          // IF symbol
-          if (line[2].isNotEmpty) {
-            if (symbolInSymtab(line[2])) {
-              opAddr = (symbols[line[2]]!).padLeft(4);
-            } else {
-              return 1;
-            }
+      // IF opcode
+      if (checkIsValid(line[2])) {
+        // IF symbol
+        if (line[2].isNotEmpty) {
+          if (symbolInSymtab(line[2])) {
+            opAddr = (symbols[line[2]]!).padLeft(4);
           } else {
-            opAddr = 0.toRadixString(16).padLeft(4);
+            return 1;
           }
-          textRec += '${getOpcode(line[2])}$opAddr';
-        } else if (line[2] == 'BYTE') {
-          List<int> obj = line[3].substring(2, line[3].length).codeUnits;
-          String s = String.fromCharCodes(obj);
-          String objCode =
-              utf8.encode(s).map((e) => e.toRadixString(16)).join();
-          textRec += "${getOpcode(line[2])}$objCode";
-        } else if (line[2] == 'WORD') {
-          textRec +=
-              "${getOpcode('WORD')}${int.parse(line[3]).toRadixString(16).padLeft(4)}";
+        } else {
+          opAddr = 0.toRadixString(16).padLeft(4);
         }
+        textRec += '${getOpcode(line[2])}$opAddr';
+      } else if (line[2] == 'BYTE') {
+        List<int> obj = line[3].substring(2, line[3].length).codeUnits;
+        String s = String.fromCharCodes(obj);
+        String objCode = utf8.encode(s).map((e) => e.toRadixString(16)).join();
+        textRec += "${getOpcode(line[2])}$objCode";
+      } else if (line[2] == 'WORD') {
+        textRec +=
+            "${getOpcode('WORD')}${int.parse(line[3]).toRadixString(16).padLeft(4)}";
       }
     }
 
@@ -124,5 +125,16 @@ class PassTwo {
       }
     }
     return false;
+  }
+
+  static List<String> formatLine(String inp) {
+    List<String> out = [];
+    for (String word in inp.split(' ')) {
+      word.trim();
+      if (word != '' || word.isNotEmpty) {
+        out.add(word);
+      }
+    }
+    return out;
   }
 }
