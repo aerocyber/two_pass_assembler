@@ -64,7 +64,6 @@ class PassOne {
         return 1;
       } else {
         if (!checkIsValid(line[0]) && line[0] != '-') {
-          print(line[0]);
           symbols.addAll({line[0]: PassOne.toHex(locctr)});
         }
       }

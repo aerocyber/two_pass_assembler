@@ -181,28 +181,28 @@ class _TwoPassHomeState extends State<TwoPassHome> {
                             },
                           );
                         }
-                        // int p2res = p2.run();
-                        // if (p2res != 0) {
-                        //   String err = '';
-                        //   err = 'Undefined Symbol';
-                        //   showDialog(
-                        //     context: context,
-                        //     builder: (context) {
-                        //       return AlertDialog(
-                        //         title: const Text('Error'),
-                        //         content: Text(err),
-                        //         actions: [
-                        //           TextButton(
-                        //             onPressed: () {
-                        //               Navigator.of(context).pop();
-                        //             },
-                        //             child: const Text('OK'),
-                        //           ),
-                        //         ],
-                        //       );
-                        //     },
-                        //   );
-                        // }
+                        int p2res = p2.run();
+                        if (p2res != 0) {
+                          String err = '';
+                          err = 'Undefined Symbol';
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text('Error'),
+                                content: Text(err),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
                       } on Exception catch (e) {
                         print(e.toString());
                       }
