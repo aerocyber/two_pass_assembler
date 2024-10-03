@@ -89,7 +89,7 @@ class PassOne {
     }
     writeSymtab();
     int length = locctr - start;
-    len.writeAsStringSync('$length');
+    len.writeAsStringSync(length.toRadixString(16));
     return 0;
   }
 
