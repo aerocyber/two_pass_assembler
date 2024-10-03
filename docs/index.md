@@ -74,6 +74,6 @@ To clear the path, tap the `Clear fields` button.
 
 ## Permanent Links
 
-Source: 
+Source: [https://adi.has.coffee/two-pass-src](https://adi.has.coffee/two-pass-src)
 
-Release: 
+Latest Release: [https://adi.has.coffee/two-pass-rel](https://adi.has.coffee/two-pass-rel)
