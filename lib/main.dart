@@ -3,6 +3,9 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:two_pass_assembler/core/pass_one.dart';
+import 'package:two_pass_assembler/core/pass_two.dart';
+import 'package:two_pass_assembler/core/path_handler.dart';
 
 void main() {
   runApp(const TwoPassApp());
@@ -132,6 +135,77 @@ class _TwoPassHomeState extends State<TwoPassHome> {
                   onPressed: () {
                     if (__key.currentState!.validate()) {
                       // TODO: Build event
+                      try {
+                        File f = File(cntr1.text);
+                        createBuild(f);
+                        File symtab = getSymtab(f);
+                        File out = getOut(f);
+                        File inter = getIntermediate(f);
+                        File le = getLength(f);
+                        // Pass 1
+                        PassOne p1 = PassOne(
+                          inter: inter,
+                          len: le,
+                          src: f,
+                          symtab: symtab,
+                        );
+                        PassTwo p2 = PassTwo(
+                          inter: inter,
+                          len: le,
+                          outFile: out,
+                          symtab: symtab,
+                        );
+                        int p1res = p1.runAlgorithm();
+                        if (p1res != 0) {
+                          String err = '';
+                          if (p1res == 1) {
+                            err = 'Duplicate symbol';
+                          } else {
+                            err = 'Invalid Opcode';
+                          }
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text('Error'),
+                                content: Text(err),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
+                        int p2res = p2.run();
+                        if (p2res != 0) {
+                          String err = '';
+                          err = 'Undefined Symbol';
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text('Error'),
+                                content: Text(err),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
+                      } on Exception catch (e) {
+                        print(e.toString());
+                      }
                     }
                   },
                   child: const Row(
@@ -158,7 +232,7 @@ class _TwoPassHomeState extends State<TwoPassHome> {
                   ),
                   onPressed: () {
                     cntr1.text = '';
-                    cntr2.text = '';
+                    setState(() {});
                   },
                   child: const Row(
                     children: [
