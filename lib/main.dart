@@ -201,6 +201,21 @@ class _TwoPassHomeState extends State<TwoPassHome> {
                               );
                             },
                           );
+                        } else {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('OK'),
+                                    ),
+                                  ],
+                                );
+                              });
                         }
                       } on Exception catch (e) {
                         showDialog(
