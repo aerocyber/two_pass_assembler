@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:two_pass_assembler/core/optab.dart';
-import 'package:two_pass_assembler/core/pass_one.dart';
 
 /// `PassTwo` class includes the implementation of
 /// pass 2 of the two pass algorithm.
@@ -44,6 +43,7 @@ class PassTwo {
   /// In case of an error, error code is returned immediately and the output
   /// files will be invalid.
   int run() {
+    readSymtab();
     List<String> contents = inter.readAsLinesSync();
     List<String> line;
     int start = 0;
@@ -54,16 +54,11 @@ class PassTwo {
 
     for (int i = 0; i < contents.length; i++) {
       line = PassTwo.formatLine(contents[i]);
-      print(contents[i]);
-      print(line[0]);
-      print(line[1]);
-      print(line[2]);
-      print(line[3]);
-      if (i == 0 && line[1] == 'START') {
+      if (line[2] == 'START') {
         int l = int.parse(len.readAsStringSync());
-        textRec += line[2];
-        start = int.parse(line[2]);
-        header = 'H^${l.toRadixString(16).padLeft(6)}';
+        textRec += line[3];
+        start = int.parse(line[3]);
+        header = 'H^${line[1]}^${l.toRadixString(16)}';
         outFile.writeAsStringSync('$header\n');
       } else {
         textRec += '0000';
@@ -82,27 +77,27 @@ class PassTwo {
         // IF symbol
         if (line[2].isNotEmpty) {
           if (symbolInSymtab(line[2])) {
-            opAddr = (symbols[line[2]]!).padLeft(4);
+            opAddr = (symbols[line[2]]!);
           } else {
-            return 1;
+            if (!checkIsValid(line[2])) {
+              return 1;
+            }
           }
         } else {
-          opAddr = 0.toRadixString(16).padLeft(4);
+          opAddr = 0.toRadixString(16);
         }
         textRec += '${getOpcode(line[2])}$opAddr';
       } else if (line[2] == 'BYTE') {
         List<int> obj = line[3].substring(2, line[3].length).codeUnits;
         String s = String.fromCharCodes(obj);
         String objCode = utf8.encode(s).map((e) => e.toRadixString(16)).join();
-        textRec += "${getOpcode(line[2])}$objCode";
+        textRec += objCode;
       } else if (line[2] == 'WORD') {
-        textRec +=
-            "${getOpcode('WORD')}${int.parse(line[3]).toRadixString(16).padLeft(4)}";
+        textRec += int.parse(line[3]).toRadixString(16);
       }
     }
 
-    outFile.writeAsString(
-        '$header\n$textRec\nE^${start.toRadixString(16).padLeft(4)}');
+    outFile.writeAsString('$header\n$textRec\nE^${start.toRadixString(16)}\n');
     return 0;
   }
 
@@ -111,7 +106,7 @@ class PassTwo {
     List<String> contents = symtab.readAsLinesSync();
     List<String> line = [];
     for (int i = 0; i < contents.length; i++) {
-      line = PassOne.formatLine(contents[i]);
+      line = PassTwo.formatLine(contents[i]);
       symbols.addAll({line[0]: line[1]});
     }
   }
@@ -120,7 +115,7 @@ class PassTwo {
   /// Returns `true` if symbol is in symtab else return `false`
   bool symbolInSymtab(String symbol) {
     for (int i = 0; i < symbols.keys.length; i++) {
-      if (symbol == (symbols.keys as List)[i]) {
+      if (symbol == symbols.keys.toList()[i]) {
         return true;
       }
     }

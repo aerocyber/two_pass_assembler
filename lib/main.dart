@@ -134,7 +134,6 @@ class _TwoPassHomeState extends State<TwoPassHome> {
                   ),
                   onPressed: () {
                     if (__key.currentState!.validate()) {
-                      // TODO: Build event
                       try {
                         File f = File(cntr1.text);
                         createBuild(f);
@@ -204,7 +203,22 @@ class _TwoPassHomeState extends State<TwoPassHome> {
                           );
                         }
                       } on Exception catch (e) {
-                        print(e.toString());
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text('Error'),
+                                content: Text(e.toString()),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('OK'),
+                                  )
+                                ],
+                              );
+                            });
                       }
                     }
                   },
