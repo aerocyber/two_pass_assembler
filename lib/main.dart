@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -33,17 +34,10 @@ class TwoPassHome extends StatefulWidget {
 }
 
 class _TwoPassHomeState extends State<TwoPassHome> {
-  int _counter = 0;
   TextEditingController cntr1 = TextEditingController();
   TextEditingController cntr2 = TextEditingController();
   final __key = GlobalKey<FormState>();
   late String path1, path2;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,141 +53,123 @@ class _TwoPassHomeState extends State<TwoPassHome> {
         toolbarHeight: 75.0,
         shadowColor: Theme.of(context).colorScheme.secondary,
       ),
-      body: Center(
-        child: Form(
-          key: __key,
-          child: Padding(
-            padding: const EdgeInsets.all(150.0),
-            child: Column(
+      body: Form(
+        key: __key,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                TextFormField(
-                  maxLength: 1000,
-                  controller: cntr1,
-                  maxLengthEnforcement: MaxLengthEnforcement.none,
-                  autofocus: true,
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                    prefixIcon: const Icon(Icons.file_open),
-                    hintText: 'Enter the path to the input file',
-                    labelText: 'Path to input file *',
-                    suffixIcon: cntr1.text.isEmpty
-                        ? InkWell(
-                            onTap: () =>
-                                {}, // TODO: Method to get dir by opening it
-                            child: const Icon(Icons.manage_search),
-                          )
-                        : null,
+                SizedBox(
+                  width: 1000,
+                  child: TextFormField(
+                    maxLength: 1000,
+                    controller: cntr1,
+                    maxLengthEnforcement: MaxLengthEnforcement.none,
+                    autofocus: true,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(10.0))),
+                      prefixIcon: Icon(Icons.file_open),
+                      hintText: 'Enter the path to the input file',
+                      labelText: 'Path to input file *',
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Enter a path";
+                      }
+                      if (!(File(value).existsSync())) {
+                        return "Path does not exist";
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      path1 = value!;
+                    },
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Enter a path";
-                    }
-                    if (!(File(value).existsSync())) {
-                      return "Path does not exist";
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    path1 = value!;
-                  },
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
-                TextFormField(
-                  maxLength: 1000,
-                  controller: cntr2,
-                  maxLengthEnforcement: MaxLengthEnforcement.none,
-                  autofocus: true,
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                    prefixIcon: const Icon(Icons.file_open),
-                    hintText: 'Enter the path to the optab file',
-                    labelText: 'Path to optab file *',
-                    suffixIcon: cntr2.text.isEmpty
-                        ? InkWell(
-                            onTap: () =>
-                                {}, // TODO: Method to get dir by opening it
-                            child: const Icon(Icons.manage_search),
-                          )
-                        : null,
+                if (cntr1.text.isEmpty)
+                  IconButton(
+                    onPressed: () async {
+                      FilePickerResult? fres =
+                          await FilePicker.platform.pickFiles(
+                        allowMultiple: false,
+                        dialogTitle: 'Select the source code',
+                        lockParentWindow: true,
+                      );
+
+                      if (fres != null) {
+                        cntr1.text = fres.files.single.path!;
+                      }
+                    },
+                    icon: const Icon(
+                      Icons.attach_file,
+                      size: 30,
+                    ),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Enter a path";
-                    }
-                    if (!(File(value).existsSync())) {
-                      return "Path does not exist";
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    path2 = value!;
-                  },
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                      style: const ButtonStyle(
-                        alignment: Alignment.center,
-                        elevation: WidgetStatePropertyAll(8.0),
-                        shape: WidgetStatePropertyAll(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(5.0),
-                            ),
-                          ),
+              ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  style: const ButtonStyle(
+                    alignment: Alignment.center,
+                    elevation: WidgetStatePropertyAll(8.0),
+                    shape: WidgetStatePropertyAll(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(5.0),
                         ),
                       ),
-                      onPressed: () {
-                        if (__key.currentState!.validate()) {
-                          // TODO: Build event
-                        }
-                      },
-                      child: const Row(
-                        children: [
-                          Icon(Icons.build),
-                          Text("Build"),
-                        ],
-                      ),
                     ),
-                    const SizedBox(
-                      width: 50,
-                    ),
-                    ElevatedButton(
-                      style: const ButtonStyle(
-                        alignment: Alignment.center,
-                        elevation: WidgetStatePropertyAll(8.0),
-                        shape: WidgetStatePropertyAll(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(5.0),
-                            ),
-                          ),
+                  ),
+                  onPressed: () {
+                    if (__key.currentState!.validate()) {
+                      // TODO: Build event
+                    }
+                  },
+                  child: const Row(
+                    children: [
+                      Icon(Icons.build),
+                      Text("Build"),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  width: 50,
+                ),
+                ElevatedButton(
+                  style: const ButtonStyle(
+                    alignment: Alignment.center,
+                    elevation: WidgetStatePropertyAll(8.0),
+                    shape: WidgetStatePropertyAll(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(5.0),
                         ),
                       ),
-                      onPressed: () {
-                        cntr1.text = '';
-                        cntr2.text = '';
-                      },
-                      child: const Row(
-                        children: [
-                          Icon(Icons.clear),
-                          Text("Clear fields"),
-                        ],
-                      ),
                     ),
-                  ],
+                  ),
+                  onPressed: () {
+                    cntr1.text = '';
+                    cntr2.text = '';
+                  },
+                  child: const Row(
+                    children: [
+                      Icon(Icons.clear),
+                      Text("Clear fields"),
+                    ],
+                  ),
                 ),
               ],
             ),
-          ),
+          ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
