@@ -4,13 +4,19 @@ Two pass assembler implementation
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+Build instruction:
 
-A few resources to get you started if this is your first Flutter project:
+Get the source:
+```bash
+git clone https://github.com/aerocyber/two_pass_assembler\
+```
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Get dependency:
+```bash
+flutter pub get
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Build for release
+```bash
+flutter build linux --release --tree-shake-icons --no-obfuscate
+```
