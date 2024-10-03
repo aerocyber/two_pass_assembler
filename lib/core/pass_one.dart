@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:two_pass_assembler/core/optab.dart';
 
-import 'optab.dart';
 
 /// Handle the pass 1 algorithm and related methods.
 /// Requires the source assembly (`File`), intermediate (`File`) and
@@ -18,35 +17,37 @@ class PassOne {
   /// Symtab file
   final File symtab;
 
+  /// Program length
+  final File len;
+
   Map<String, String> symbols = {};
 
   PassOne({
     required this.src,
     required this.inter,
     required this.symtab,
+    required this.len,
   });
 
   /// Run the algorithm and return error codes
-  // TODO: error code docs
   /// errorCode | Reference
   /// 0 | No error
   /// 1 | Duplicate Symbol
   /// 2 | Invalid opcode
   int runAlgorithm() {
-    // TODO: Pass 1 implementation
 
     List<String> contents = src.readAsLinesSync();
     int locctr = 0, start = 0;
 
     for (int i = 0; i < contents.length; i++) {
-      List<String> line = formatLine(contents[i]);
+      List<String> line = PassOne.formatLine(contents[i]);
 
       // START
       if (i == 0 && line[1] == 'START') {
         start = fromHex(line[2]);
         locctr = start;
         inter.writeAsStringSync(
-            '${toHex(locctr)} ${line[0]} ${line[1]} ${line[2]}\n');
+            '${PassOne.toHex(locctr)} ${line[0]} ${line[1]} ${line[2]}\n');
         continue;
       }
 
@@ -62,7 +63,7 @@ class PassOne {
         if (symbolInSymtab(line[0]) && line[0] != '-') {
           return 1;
         } else {
-          symbols.addAll({line[i]: toHex(locctr)});
+          symbols.addAll({line[i]: PassOne.toHex(locctr)});
         }
 
         // optab search
@@ -81,11 +82,14 @@ class PassOne {
         }
 
         inter.writeAsStringSync(
-            '${toHex(locctr)} ${line[0]} ${line[1]} ${line[2]}');
+            '${PassOne.toHex(locctr)} ${line[0]} ${line[1]} ${line[2]}');
       }
       inter.writeAsStringSync(
-          '${toHex(locctr)} ${line[0]} ${line[1]} ${line[2]}');
+          '${PassOne.toHex(locctr)} ${line[0]} ${line[1]} ${line[2]}');
     }
+    writeSymtab();
+    int length = locctr - start;
+    len.writeAsStringSync('$length');
     return 0;
   }
 
@@ -103,7 +107,7 @@ class PassOne {
 
   /// Convert a `String` to `List<String>` based on whitespace.
   /// The `List` returned consist of `String` which is not empty.
-  List<String> formatLine(String inp) {
+  static List<String> formatLine(String inp) {
     List<String> out = [];
     for (String word in inp.split(' ')) {
       word.trim();
@@ -114,6 +118,8 @@ class PassOne {
     return out;
   }
 
+  /// Check if symbol is in symtab.
+  /// Returns `true` if symbol is in symtab else return `false`
   bool symbolInSymtab(String symbol) {
     for (int i = 0; i < symbols.keys.length; i++) {
       if (symbol == (symbols.keys as List)[i]) {
@@ -121,5 +127,15 @@ class PassOne {
       }
     }
     return false;
+  }
+
+  /// Write symtab to file
+  void writeSymtab() {
+    String key, value;
+    for (int i = 0; i < symbols.keys.length; i++) {
+      key = symbols.keys.toList()[i];
+      value = symbols[key]!;
+      symtab.writeAsStringSync('$key $value\n');
+    }
   }
 }
