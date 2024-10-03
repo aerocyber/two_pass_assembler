@@ -32,8 +32,8 @@ Map<String, String> _optab = {
 /// Requires a String which is checked against the keys in optab.
 /// Returns `true` if mnemonic is valid, otherwise returns `false`.
 bool checkIsValid(String mnemonic) {
-  for (var element in _optab.keys) {
-    if (mnemonic == element) {
+  for (int x = 0; x < _optab.keys.length; x++) {
+    if (mnemonic == _optab.keys.toList()[x]) {
       return true;
     }
   }

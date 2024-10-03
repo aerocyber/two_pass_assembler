@@ -63,7 +63,10 @@ class PassOne {
       if (symbolInSymtab(line[0]) && line[0] != '-') {
         return 1;
       } else {
-        symbols.addAll({line[1]: PassOne.toHex(locctr)});
+        if (!checkIsValid(line[0]) && line[0] != '-') {
+          print(line[0]);
+          symbols.addAll({line[0]: PassOne.toHex(locctr)});
+        }
       }
 
       // optab search
