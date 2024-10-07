@@ -1,0 +1,67 @@
+<h1 id="two-pass-assembler">Two Pass Assembler</h1>
+<h2 id="about">About</h2>
+<p>Two Pass Assembler is a SIC assember frontend implementing two pass
+algorithm (Pass 1 and Pass 2) for the SIC architecture.</p>
+<h3 id="copyright">Copyright</h3>
+<p>MIT License</p>
+<p>Copyright (c) 2024 aerocyberdev@pm.me</p>
+<p>Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+“Software”), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:</p>
+<p>The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.</p>
+<p>THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+<h3 id="versioning">Versioning</h3>
+<p>Version 1.1: Fixes Version 1.0: Initial release</p>
+<h2 id="language-considerations">Language Considerations</h2>
+<p>The assembler requires the source to have 3 sections per line
+separated by tab.</p>
+<pre><code>LABEL   MNEMONIC    OPERATOR</code></pre>
+<p>In case of the lack of <code>LABEL</code>, it must be filled with
+<code>-</code>. The first line MUST be:</p>
+<pre><code>LABEL START ADDRESS</code></pre>
+<p><code>LABEL</code> can be replaced with a suitable label,
+<code>ADDRESS</code> with a HEX value.</p>
+<p>The <code>OPTAB</code> has been hardcoded so as to reduce the need of
+taking additional input.</p>
+<p>The output of the assembler will be in the <code>build</code>
+subdirectory located in the source program directory.</p>
+<h2 id="using-the-assembler">Using the assembler</h2>
+<p>Using the assembler is straight forward.</p>
+<figure>
+<img src="window.png" title="UI - Window" alt="UI Window" />
+<figcaption aria-hidden="true">UI Window</figcaption>
+</figure>
+<p>All that is to be done is to create the source file and provide its
+path in the input field. Alternatively, save the source file and click
+on the File Attach button to the right of the input field to open
+<code>Open File</code> dialog box.</p>
+<figure>
+<img src="input.png" title="UI - Provide source"
+alt="UI - Text field" />
+<figcaption aria-hidden="true">UI - Text field</figcaption>
+</figure>
+<p>Then, click the <code>Build</code> button to build.</p>
+<blockquote>
+<p>Building will create a <code>build</code> subdirectory. If it already
+exist, the entire directory is deleted and then recreated.</p>
+</blockquote>
+<p>Open the directory <code>build</code> to see the output.</p>
+<p>To clear the path, tap the <code>Clear fields</code> button.</p>
+<h2 id="apis">APIs</h2>
+<p>See <a href="./api_docs/index.html">API Documentation</a>.</p>
+<h2 id="permanent-links">Permanent Links</h2>
+<p>Source: <a
+href="https://adi.has.coffee/two-pass-src">https://adi.has.coffee/two-pass-src</a></p>
+<p>Latest Release: <a
+href="https://adi.has.coffee/two-pass-rel">https://adi.has.coffee/two-pass-rel</a></p>
