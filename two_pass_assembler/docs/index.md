@@ -30,6 +30,7 @@ SOFTWARE.
 
 ### Versioning
 
+Version 1.1: Fixes
 Version 1.0: Initial release
 
 ## Language Considerations
@@ -61,7 +62,7 @@ Using the assembler is straight forward.
 
 All that is to be done is to create the source file and provide its path in the input field. Alternatively, save the source file and click on the File Attach button to the right of the input field to open `Open File` dialog box.
 
-![UI - Text field](input.png "UI - Provide sorce")
+![UI - Text field](input.png "UI - Provide source")
 
 Then, click the `Build` button to build.
 
@@ -70,6 +71,10 @@ Then, click the `Build` button to build.
 Open the directory `build` to see the output.
 
 To clear the path, tap the `Clear fields` button.
+
+## APIs
+
+See [API Documentation](./api_docs/index.html).
 
 
 ## Permanent Links
