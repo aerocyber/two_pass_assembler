@@ -38,6 +38,7 @@ class PassOne {
     int locctr = 0, start = 0;
 
     List<String> tmp = [];
+    String s;
 
     List<String> line = [];
     for (int i = 0; i < contents.length; i++) {
@@ -49,7 +50,7 @@ class PassOne {
       if (i == 0 && line[1] == 'START') {
         start = fromHex(line[2]);
         locctr = start;
-        tmp.add('${PassOne.toHex(locctr)} ${line[0]} ${line[1]} ${line[2]}\n');
+        tmp.add('${line[0]} ${line[1]} ${line[2]}\n');
         continue;
       }
 
@@ -64,7 +65,8 @@ class PassOne {
         return 1;
       } else {
         if (!checkIsValid(line[0]) && line[0] != '-') {
-          symbols.addAll({line[0]: PassOne.toHex(locctr)});
+          s = line[0].split(' ')[0];
+          symbols.addAll({s: PassOne.toHex(locctr)});
         }
       }
 
@@ -79,13 +81,13 @@ class PassOne {
         locctr += int.parse(line[2], radix: 16);
       } else if (line[1] == 'BYTE') {
         locctr += line[2].length;
-      } else {
+      } else if (!symbolInSymtab(line[1])) {
         return 2;
       }
 
       tmp.add('${PassOne.toHex(locctr)} ${line[0]} ${line[1]} ${line[2]}\n');
     }
-    tmp.add('${PassOne.toHex(locctr)} ${line[0]} ${line[1]} ${line[2]}\n');
+    tmp.add('${line[0]} ${line[1]} ${line[2]}\n');
     writeSymtab();
     int length = locctr - start;
     len.writeAsStringSync(length.toRadixString(16));
@@ -113,13 +115,28 @@ class PassOne {
   /// The `List` returned consist of `String` which is not empty.
   static List<String> formatLine(String inp) {
     List<String> out = [];
+    List<String> a = [];
     for (String word in inp.split('\t')) {
-      word.trim();
+      word = word.trim();
       if (word != '' || word.isNotEmpty) {
         out.add(word);
       }
     }
-    return out;
+    String word;
+    List<String> z = [];
+    for (int x = 0; x < out.length; x++) {
+      for (String y in out[x].split(' ')) {
+        y = y.trim();
+        if (y != '' || y.isNotEmpty) {
+          z.add(y);
+        }
+      }
+      word = out[x].trim();
+      if (word != '' || word.isNotEmpty) {
+        a.add(out[x]);
+      }
+    }
+    return z;
   }
 
   /// Check if symbol is in symtab.

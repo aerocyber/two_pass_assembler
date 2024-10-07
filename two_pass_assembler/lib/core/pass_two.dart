@@ -51,20 +51,19 @@ class PassTwo {
     String header = '';
     String textRec = 'T^';
     String opAddr = '';
+    int L = 0;
+    int L1 = 0;
+    List<String> tmp = [];
 
     for (int i = 0; i < contents.length; i++) {
       line = PassTwo.formatLine(contents[i]);
-      if (line[2] == 'START') {
-        int l = int.parse(len.readAsStringSync());
-        textRec += line[3];
-        start = int.parse(line[3]);
+      if (line[1] == 'START') {
+        int l = int.parse(len.readAsStringSync(), radix: 16);
+        textRec += line[2];
+        start = int.parse(line[2]);
         header = 'H^${line[1]}^${l.toRadixString(16)}';
         outFile.writeAsStringSync('$header\n');
-      } else {
-        textRec += '0000';
       }
-
-      textRec += "^${int.parse(len.readAsStringSync())}^";
 
       // TEXT record
       // IF comment
@@ -75,29 +74,40 @@ class PassTwo {
       // IF opcode
       if (checkIsValid(line[2])) {
         // IF symbol
-        if (line[2].isNotEmpty) {
-          if (symbolInSymtab(line[2])) {
-            opAddr = (symbols[line[2]]!);
+        if (line[3].isNotEmpty) {
+          if (symbolInSymtab(line[3])) {
+            opAddr = (symbols[line[3]]!);
           } else {
-            if (!checkIsValid(line[2])) {
-              return 1;
-            }
+            return 1;
           }
         } else {
           opAddr = 0.toRadixString(16);
         }
-        textRec += '${getOpcode(line[2])}$opAddr';
+        L++;
+        tmp.add('${getOpcode(line[2])}$opAddr^');
       } else if (line[2] == 'BYTE') {
         List<int> obj = line[3].substring(2, line[3].length).codeUnits;
         String s = String.fromCharCodes(obj);
         String objCode = utf8.encode(s).map((e) => e.toRadixString(16)).join();
-        textRec += objCode;
+        L1 += line[3].length - 3;
+        tmp.add('$objCode^');
       } else if (line[2] == 'WORD') {
-        textRec += int.parse(line[3]).toRadixString(16);
+        L++;
+        tmp.add('${int.parse(line[3]).toRadixString(16).padLeft(6, '0')}^');
       }
     }
+    L = (L * 3);
+    L = L1;
 
-    outFile.writeAsString('$header\n$textRec\nE^${start.toRadixString(16)}\n');
+    textRec += '^${L.toRadixString(16)}^';
+
+    for (int x = 0; x < tmp.length; x++) {
+      textRec += tmp[x];
+    }
+
+    print(textRec);
+
+    outFile.writeAsString('$header\n$textRec\nE^${start}\n');
     return 0;
   }
 

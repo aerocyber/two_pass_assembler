@@ -20,29 +20,50 @@ Directory createBuild(File f) {
 /// Get symtab file
 /// Returns a `File`
 File getSymtab(File fpath) {
-  return File(p.join(fpath.absolute.parent.path, 'build', 'symtab.tmp'));
+  File f = File(p.join(fpath.absolute.parent.path, 'build', 'symtab.tmp'));
+  if (!f.existsSync()) {
+    f.createSync();
+  }
+  return f;
 }
 
 /// Get optab file
 /// Returns a `File`
 File getOptab(File fpath) {
-  return File(p.join(fpath.absolute.parent.path, 'build', 'optab.bin'));
+  File f = File(p.join(fpath.absolute.parent.path, 'build', 'optab.bin'));
+  if (!f.existsSync()) {
+    f.createSync();
+  }
+  return f;
 }
 
 /// Get intermediate file
 /// Returns a `File`
 File getIntermediate(File fpath) {
-  return File(p.join(fpath.absolute.parent.path, 'build', 'intermediate.tmp'));
+  File f =
+      File(p.join(fpath.absolute.parent.path, 'build', 'intermediate.tmp'));
+  if (!f.existsSync()) {
+    f.createSync();
+  }
+  return f;
 }
 
 /// Get output file
 /// Returns a `File`
 File getOut(File fpath) {
-  return File(p.join(fpath.absolute.parent.path, 'build', 'output.bin'));
+  File f = File(p.join(fpath.absolute.parent.path, 'build', 'output.bin'));
+  if (!f.existsSync()) {
+    f.createSync();
+  }
+  return f;
 }
 
 /// Get length file
 /// Returns a `File`
 File getLength(File fpath) {
-  return File(p.join(fpath.absolute.parent.path, 'build', 'length'));
+  File f = File(p.join(fpath.absolute.parent.path, 'build', 'length'));
+  if (!f.existsSync()) {
+    f.createSync();
+  }
+  return f;
 }
