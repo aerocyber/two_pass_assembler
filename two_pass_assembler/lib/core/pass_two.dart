@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:two_pass_assembler/core/optab.dart';
 
@@ -52,17 +51,25 @@ class PassTwo {
     String textRec = 'T^';
     String opAddr = '';
     int L = 0;
-    int L1 = 0;
+
     List<String> tmp = [];
 
     for (int i = 0; i < contents.length; i++) {
       line = PassTwo.formatLine(contents[i]);
+      if (line.isEmpty) continue; // Skip empty lines
+
       if (line[1] == 'START') {
         int l = int.parse(len.readAsStringSync(), radix: 16);
         textRec += line[2];
         start = int.parse(line[2]);
-        header = 'H^${line[1]}^${l.toRadixString(16)}';
+        // header = 'H^${line[2]}^${l.toRadixString(16)}';
+        // print('header: H^${line[1]}^${l.toRadixString(16)}');
+        // print(
+        //     "header = 'H^${line[0]}^${line[2]}^${l.toRadixString(16).padLeft(6, '0')}'");
+        header =
+            'H^${line[0]}^${line[2]}^${l.toRadixString(16).padLeft(6, '0')}';
         outFile.writeAsStringSync('$header\n');
+        continue;
       }
 
       // TEXT record
@@ -74,40 +81,48 @@ class PassTwo {
       // IF opcode
       if (checkIsValid(line[2])) {
         // IF symbol
-        if (line[3].isNotEmpty) {
+        if (line.length > 3 && line[3].isNotEmpty) {
           if (symbolInSymtab(line[3])) {
-            opAddr = (symbols[line[3]]!);
+            opAddr = symbols[line[3]]!;
           } else {
             return 1;
           }
         } else {
-          opAddr = 0.toRadixString(16);
+          opAddr = '00';
         }
-        L++;
+        L += 3;
         tmp.add('${getOpcode(line[2])}$opAddr^');
       } else if (line[2] == 'BYTE') {
-        List<int> obj = line[3].substring(2, line[3].length).codeUnits;
-        String s = String.fromCharCodes(obj);
-        String objCode = utf8.encode(s).map((e) => e.toRadixString(16)).join();
-        L1 += line[3].length - 3;
-        tmp.add('$objCode^');
+        // List<int> obj = line[3].substring(2, line[3].length - 1).codeUnits;
+        // String s = String.fromCharCodes(obj);
+        // String objCode = utf8.encode(s).map((e) => e.toRadixString(16)).join();
+        // L1 += line[3].length - 3;
+        // tmp.add('$objCode^');
+
+        if (line[3].startsWith("C'")) {
+          String s = line[3].substring(2, line[3].length - 1);
+          String objCode = s.codeUnits
+              .map((e) => e.toRadixString(16).padLeft(2, '0'))
+              .join();
+          tmp.add('$objCode^');
+          L += objCode.length ~/ 2;
+        } else if (line[3].startsWith("X'")) {
+          String s = line[3].substring(2, line[3].length - 1);
+          tmp.add('$s^');
+          L += s.length ~/ 2;
+        }
       } else if (line[2] == 'WORD') {
-        L++;
         tmp.add('${int.parse(line[3]).toRadixString(16).padLeft(6, '0')}^');
+        L += 3;
       }
     }
-    L = (L * 3);
-    L = L1;
-
     textRec += '^${L.toRadixString(16)}^';
 
     for (int x = 0; x < tmp.length; x++) {
       textRec += tmp[x];
     }
 
-    print(textRec);
-
-    outFile.writeAsString('$header\n$textRec\nE^${start}\n');
+    outFile.writeAsString('$header\n$textRec\nE^$start\n');
     return 0;
   }
 

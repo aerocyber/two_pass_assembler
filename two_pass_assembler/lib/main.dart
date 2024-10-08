@@ -159,8 +159,10 @@ class _TwoPassHomeState extends State<TwoPassHome> {
                           String err = '';
                           if (p1res == 1) {
                             err = 'Duplicate symbol';
-                          } else {
+                          } else if (p1res == 2) {
                             err = 'Invalid Opcode';
+                          } else {
+                            err = 'Invalid BYTE format';
                           }
                           showDialog(
                             context: context,
