@@ -30,7 +30,7 @@ SOFTWARE.
 
 ### Versioning
 
-Version 1.1: Fixes
+Version 1.1: Fixes <br>
 Version 1.0: Initial release
 
 ## Language Considerations
@@ -53,6 +53,17 @@ LABEL START ADDRESS
 The `OPTAB` has been hardcoded so as to reduce the need of taking additional input.
 
 The output of the assembler will be in the `build` subdirectory located in the source program directory.
+
+## System Requirements
+
+The following OSs are supported:
+
+- Windows 10 or 11
+- Linux (any version/distro) with gtk libraries installed
+
+Additionally, Windows Smartscreen may flag the files as unsafe. Click `More Info > Run Anyway` from the Smartscreen dialog to run it.
+
+* Windows installer requires administrator access if installing for more than one user.
 
 ## Using the assembler
 

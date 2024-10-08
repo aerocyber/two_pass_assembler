@@ -8,7 +8,7 @@ Build instruction:
 
 Get the source:
 ```bash
-git clone https://github.com/aerocyber/two_pass_assembler\
+git clone https://github.com/aerocyber/two_pass_assembler
 cd two_pass_assembler/two_pass_assembler
 ```
 
@@ -32,3 +32,7 @@ To build documentation, install `pandoc` and then from the same dir as above,
 cd docs/
 pandoc index.md -o Two-Pass-Assembler-manual.pdf
 ```
+
+## Docs
+
+[See docs](two_pass_assembler/docs/index.html)

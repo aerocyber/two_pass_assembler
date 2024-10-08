@@ -1,0 +1,25 @@
+<h1 id="two_pass_assembler">two_pass_assembler</h1>
+<p>Two pass assembler implementation</p>
+<h2 id="getting-started">Getting Started</h2>
+<p>Build instruction:</p>
+<p>Get the source:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/aerocyber/two_pass_assembler</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> two_pass_assembler/two_pass_assembler</span></code></pre></div>
+<p>Get dependency:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">flutter</span> pub get</span></code></pre></div>
+<p>Build for release</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Linux</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">flutter</span> build linux <span class="at">--release</span> <span class="at">--tree-shake-icons</span> <span class="at">--no-obfuscate</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Windows</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="ex">flutter</span> build windows <span class="at">--release</span> <span class="at">--tree-shake-icons</span> <span class="at">--no-obfuscate</span></span></code></pre></div>
+<p>To build documentation, install <code>pandoc</code> and then from the
+same dir as above,</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> docs/</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pandoc</span> index.md <span class="at">-o</span> Two-Pass-Assembler-manual.pdf</span></code></pre></div>
+<h2 id="docs">Docs</h2>
+<p><a href="two_pass_assembler/docs/index.html">See docs</a></p>
